@@ -108,7 +108,7 @@ public class ControlDeStockFrame extends JFrame {
         comboCategoria.setBounds(10, 145, 265, sizeY);
 
         botonGuardar = new JButton("Guardar");
-        botonLimpiar = new JButton("Limpiar");
+        botonLimpiar = new JButton("kedwin");
         botonGuardar.setBounds(10, 175, sizeBtn, 20);
         botonLimpiar.setBounds(20+sizeBtn, 175, sizeBtn, 20);
 
