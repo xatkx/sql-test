@@ -2,6 +2,9 @@ package com.alura.jdbc.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class ProductoController {
 
@@ -13,8 +16,15 @@ public class ProductoController {
 		// TODO
 	}
 
-	public List<?> listar() {
-		// TODO
+	public List<?> listar() throws SQLException {
+
+		Connection connect = DriverManager.getConnection(
+				"jdbc:mysql:localhost/Stock", 
+				"root",
+				"@KKkedwin2020");
+		
+		connect.close();
+		
 		return new ArrayList<>();
 	}
 
