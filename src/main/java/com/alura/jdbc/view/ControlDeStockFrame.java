@@ -50,7 +50,7 @@ public class ControlDeStockFrame extends JFrame {
 
     private void configurarTablaDeContenido(Container container) {
         tabla = new JTable();
-
+        System.out.println("dime a ve");
        
         modelo = (DefaultTableModel) tabla.getModel();
         modelo.addColumn("Identificador del Producto");

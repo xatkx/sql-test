@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -26,9 +27,13 @@ public class ProductoController {
 		
 		Statement statement = connect.createStatement();
 		
-		boolean result = statement.execute("select id, nombre, descripcion, cantidad from productos");
+		ResultSet result = statement.executeQuery("select id, nombre, descripcion, cantidad from productos");
 		
-		System.out.println(result);
+		while(result.next())
+		{
+			System.out.println(result.getString("nombre"));
+		}
+		
 		connect.close();
 		
 		return new ArrayList<>();
