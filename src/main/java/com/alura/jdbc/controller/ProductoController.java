@@ -5,6 +5,7 @@ import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class ProductoController {
 
@@ -19,10 +20,15 @@ public class ProductoController {
 	public List<?> listar() throws SQLException {
 
 		Connection connect = DriverManager.getConnection(
-				"jdbc:mysql:localhost/Stock", 
+				"jdbc:mysql://localhost:3306/stock", 
 				"root",
 				"@KKkedwin2020");
 		
+		Statement statement = connect.createStatement();
+		
+		boolean result = statement.execute("select id, nombre, descripcion, cantidad from productos");
+		
+		System.out.println(result);
 		connect.close();
 		
 		return new ArrayList<>();

@@ -215,7 +215,7 @@ public class ControlDeStockFrame extends JFrame {
     		var productos = this.productoController.listar();
 		} catch (SQLException e) {
 //			throw new RuntimeException(e);
-			System.out.println("klk");
+			System.out.println(e.getMessage());
 		}
 
         try {
