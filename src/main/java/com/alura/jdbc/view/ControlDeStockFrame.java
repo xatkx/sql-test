@@ -51,11 +51,12 @@ public class ControlDeStockFrame extends JFrame {
     private void configurarTablaDeContenido(Container container) {
         tabla = new JTable();
         System.out.println("dime a ve");
-       
+
         modelo = (DefaultTableModel) tabla.getModel();
         modelo.addColumn("Identificador del Producto");
         modelo.addColumn("Nombre del Producto");
         modelo.addColumn("Descripción del Producto");
+        modelo.addColumn("cantidad del Producto");
 
         cargarTabla();
 
@@ -65,8 +66,8 @@ public class ControlDeStockFrame extends JFrame {
         botonModificar = new JButton("Modificar");
         botonReporte = new JButton("Reporte!!");
         botonEliminar.setBounds(10, 500, sizeBtn, 20);
-        botonModificar.setBounds(20+sizeBtn, 500, sizeBtn, 20);
-        botonReporte.setBounds(30+(sizeBtn*2), 500, sizeBtn, 20);
+        botonModificar.setBounds(20 + sizeBtn, 500, sizeBtn, 20);
+        botonReporte.setBounds(30 + (sizeBtn * 2), 500, sizeBtn, 20);
 
         container.add(tabla);
         container.add(botonEliminar);
@@ -109,9 +110,9 @@ public class ControlDeStockFrame extends JFrame {
         comboCategoria.setBounds(10, 145, 265, sizeY);
 
         botonGuardar = new JButton("Guardar");
-        botonLimpiar = new JButton("kedwin");
+        botonLimpiar = new JButton("Limpiar");
         botonGuardar.setBounds(10, 175, sizeBtn, 20);
-        botonLimpiar.setBounds(20+sizeBtn, 175, sizeBtn, 20);
+        botonLimpiar.setBounds(20 + sizeBtn, 175, sizeBtn, 20);
 
         container.add(labelNombre);
         container.add(labelDescripcion);
@@ -210,21 +211,25 @@ public class ControlDeStockFrame extends JFrame {
     }
 
     private void cargarTabla() {
-        
-    	try {
-    		var productos = this.productoController.listar();
-		} catch (SQLException e) {
-//			throw new RuntimeException(e);
-			System.out.println(e.getMessage());
-		}
 
         try {
-            // TODO
-            // productos.forEach(producto -> modelo.addRow(new Object[] { "id", "nombre",
-            // "descripcion" }));
-        } catch (Exception e) {
-            throw e;
+            var productos = this.productoController.listar();
+
+            try {
+                // TODO
+                productos.forEach(producto -> modelo.addRow(new Object[]{
+                    producto.get("id"),
+                    producto.get("nombre"),
+                    producto.get("descripcion"),
+                    producto.get("cantidad")}));
+            } catch (Exception e) {
+                throw e;
+            }
+        } catch (SQLException e) {
+//			throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
+
     }
 
     private void guardar() {
@@ -244,7 +249,7 @@ public class ControlDeStockFrame extends JFrame {
         }
 
         // TODO
-        var producto = new Object[] { textoNombre.getText(), textoDescripcion.getText(), cantidadInt };
+        var producto = new Object[]{textoNombre.getText(), textoDescripcion.getText(), cantidadInt};
         var categoria = comboCategoria.getSelectedItem();
 
         this.productoController.guardar(producto);
@@ -261,6 +266,6 @@ public class ControlDeStockFrame extends JFrame {
         this.comboCategoria.setSelectedIndex(0);
     }
 
-     int sizeBtn = 100;
-     int sizeY = 20;
+    int sizeBtn = 100;
+    int sizeY = 20;
 }
