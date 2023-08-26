@@ -186,6 +186,7 @@ public class ControlDeStockFrame extends JFrame {
             return;
         }
 
+        
         Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
                 .ifPresentOrElse(fila -> {
                     Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
@@ -195,7 +196,7 @@ public class ControlDeStockFrame extends JFrame {
                    try {
                         this.productoController.modificar(nombre, descripcion, id);
             } catch (SQLException e) {
-                       System.out.println(e.getMessage());
+                       System.out.println(e.getMessage()+"klk");
             }
                 }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
     }

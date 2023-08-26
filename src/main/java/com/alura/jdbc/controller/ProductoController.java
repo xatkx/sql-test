@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,26 +16,30 @@ public class ProductoController {
 
     public void modificar(String nombre, String descripcion, Integer id) throws SQLException {
         
-        String query = "update producto set "+
-                "nombre = '"+nombre+
-                "', descripcion = '"+descripcion+
-                "' where id = "+id;
+        String query = "UPDATE producto SET nombre = ? ,descripcion = ? WHERE id = ? ";
         
         Connection connect = new connectFactory().create();
         
-        Statement statement = connect.createStatement();
+        PreparedStatement s = connect.prepareStatement(query);
         
-        statement.execute(query);
+        s.setString(1, nombre);
+        s.setString(2, descripcion);
+        s.setInt(3,id);
         
+        boolean b = s.execute();
+        
+        System.out.println(s.getUpdateCount());
         connect.close();
         
     }
 
     public void eliminar(Integer id) throws SQLException {
-        String query = "delete from producto where id = " + id.toString();
+        String query = "delete from producto where id = ?";
+        
         Connection connect = new connectFactory().create();
-        Statement statement = connect.createStatement();
-        statement.execute(query);
+        PreparedStatement statement = connect.prepareStatement(query);
+        statement.setInt(1,id);
+        statement.execute();
 //        System.out.println(query);
         connect.close();
     }
@@ -45,10 +50,9 @@ public class ProductoController {
      
         Connection connect = new connectFactory().create();
 
-        Statement statement = connect.createStatement();
+        PreparedStatement statement = connect.prepareStatement("select id, nombre, descripcion, cantidad from producto");
 
-        boolean isRead = statement.execute("select id, nombre, descripcion, cantidad from producto");
-
+        boolean isRead = statement.execute();
         if (isRead) {
             
             ResultSet result = statement.getResultSet();
@@ -76,14 +80,15 @@ public class ProductoController {
 
     public void guardar(Map<String, String> producto) throws SQLException {
         
-        String query = "insert into producto ( nombre, descripcion, cantidad) values ("
-                + "'"+producto.get("nombre")+"', "+
-                "'"+producto.get("descripcion")+"', "+
-                producto.get("cantidad")+" )";
+        String query = "insert into producto ( nombre, descripcion, cantidad) values (?,?,?)";
+        
         Connection connect = new connectFactory().create();
         
-        Statement statement = connect.createStatement();
-        statement.execute(query);
+        PreparedStatement statement = connect.prepareStatement(query);
+        statement.setString(1, producto.get("nombre"));
+        statement.setString(2, producto.get("descripcion"));
+        statement.setInt(3, Integer.valueOf(producto.get("cantidad")));
+        statement.execute();
         
         connect.close();
         
