@@ -13,8 +13,21 @@ import java.util.Map;
 
 public class ProductoController {
 
-    public void modificar(String nombre, String descripcion, Integer id) {
-        // TODO
+    public void modificar(String nombre, String descripcion, Integer id) throws SQLException {
+        
+        String query = "update producto set "+
+                "nombre = '"+nombre+
+                "', descripcion = '"+descripcion+
+                "' where id = "+id;
+        
+        Connection connect = new connectFactory().create();
+        
+        Statement statement = connect.createStatement();
+        
+        statement.execute(query);
+        
+        connect.close();
+        
     }
 
     public void eliminar(Integer id) throws SQLException {
