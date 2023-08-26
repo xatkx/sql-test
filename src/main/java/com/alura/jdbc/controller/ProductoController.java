@@ -28,7 +28,7 @@ public class ProductoController {
         
         boolean b = s.execute();
         
-        System.out.println(s.getUpdateCount());
+        System.out.println(descripcion);
         connect.close();
         
     }
