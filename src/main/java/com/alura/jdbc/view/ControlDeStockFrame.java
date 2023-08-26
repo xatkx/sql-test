@@ -176,7 +176,8 @@ public class ControlDeStockFrame extends JFrame {
     }
 
     private boolean tieneFilaElegida() {
-        return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0;
+        return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0 ||
+                tabla.getSelectedRow() > tabla.getRowCount();
     }
 
     private void modificar() {
