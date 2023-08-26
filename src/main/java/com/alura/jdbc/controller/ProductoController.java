@@ -1,5 +1,6 @@
 package com.alura.jdbc.controller;
 
+import com.alura.jdbc.factory.connectFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
@@ -24,10 +25,7 @@ public class ProductoController {
 
         List<Map<String,String>> productos = new ArrayList<>();
      
-        Connection connect = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/controlStock",
-                "root",
-                "1212");
+        Connection connect = new connectFactory().create();
 
         Statement statement = connect.createStatement();
 
@@ -40,23 +38,37 @@ public class ProductoController {
             while (result.next()) {
                 Map<String,String> producto = new HashMap<String,String>();
                 
-                producto.put("id", String.valueOf(result.getInt(1)));
+                producto.put("id", result.getString(1));
                 producto.put("nombre", result.getString(2));
                 producto.put("descripcion", result.getString(3));
-                producto.put("cantidad", String.valueOf(result.getString(4)));
+                producto.put("cantidad", result.getString(4));
                 
-
+//                result.
                 productos.add(producto);
-                //System.out.println(result.getString(2));
+                
+//                System.out.println(result.getString(1)+result.getString(1));
             }
+            
+//            System.out.println("klk");
         }
         connect.close();
 
         return productos;
     }
 
-    public void guardar(Object producto) {
-        // TODO
+    public void guardar(Map<String, String> producto) throws SQLException {
+        
+        String query = "insert into producto ( nombre, descripcion, cantidad) values ("
+                + "'"+producto.get("nombre")+"', "+
+                "'"+producto.get("descripcion")+"', "+
+                producto.get("cantidad")+" )";
+        Connection connect = new connectFactory().create();
+        
+        Statement statement = connect.createStatement();
+        statement.execute(query);
+        
+        connect.close();
+        
     }
 
 }
