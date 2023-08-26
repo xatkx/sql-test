@@ -17,8 +17,13 @@ public class ProductoController {
         // TODO
     }
 
-    public void eliminar(Integer id) {
-        // TODO
+    public void eliminar(Integer id) throws SQLException {
+        String query = "delete from producto where id = " + id.toString();
+        Connection connect = new connectFactory().create();
+        Statement statement = connect.createStatement();
+        statement.execute(query);
+//        System.out.println(query);
+        connect.close();
     }
 
     public List<Map<String,String>> listar() throws SQLException {
