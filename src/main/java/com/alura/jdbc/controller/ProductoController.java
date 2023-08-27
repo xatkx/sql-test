@@ -79,19 +79,44 @@ public class ProductoController {
     }
 
     public void guardar(Map<String, String> producto) throws SQLException {
-        
+        int maxCantidad = 50;
+        int cantidad = Integer.valueOf(producto.get("cantidad"));
         String query = "insert into producto ( nombre, descripcion, cantidad) values (?,?,?)";
         
         Connection connect = new connectFactory().create();
-        
+        connect.setAutoCommit(false);
         PreparedStatement statement = connect.prepareStatement(query);
-        statement.setString(1, producto.get("nombre"));
-        statement.setString(2, producto.get("descripcion"));
-        statement.setInt(3, Integer.valueOf(producto.get("cantidad")));
-        statement.execute();
         
+        try {
+            while(cantidad > 0)
+        {
+           
+            int resto = Math.min(cantidad, maxCantidad);
+            guardarDatos(producto,resto,statement);
+            cantidad -= maxCantidad;
+        }
+            System.out.println("success");
+        } catch (Exception e) {
+            
+            connect.rollback();
+            System.out.println("rollback");
+        }
+        connect.commit();
         connect.close();
         
+    }
+    
+    public void guardarDatos(Map<String,String> producto,int resto, PreparedStatement statement) throws SQLException
+    {
+//        if(resto < 50)
+//        {
+//            throw new RuntimeException("esto es un error mmg");
+//        }
+        
+        statement.setString(1, producto.get("nombre"));
+        statement.setString(2, producto.get("descripcion"));
+        statement.setInt(3, resto);
+        statement.execute();
     }
 
 }
