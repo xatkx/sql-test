@@ -1,6 +1,6 @@
 package com.alura.jdbc.controller;
 
-import com.alura.jdbc.factory.connectFactory;
+import com.alura.jdbc.factory.connectionF;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
@@ -18,7 +18,7 @@ public class ProductoController {
 
         String query = "UPDATE producto SET nombre = ? ,descripcion = ? WHERE id = ? ";
 
-        final Connection connect = new connectFactory().create();
+        final Connection connect = new connectionF().create();
 
         try (connect) {
             PreparedStatement s = connect.prepareStatement(query);
@@ -32,7 +32,7 @@ public class ProductoController {
     public void eliminar(Integer id) throws SQLException {
         String query = "delete from producto where id = ?";
 
-        final Connection connect = new connectFactory().create();
+        final Connection connect = new connectionF().create();
 
         try (connect) {
             PreparedStatement statement = connect.prepareStatement(query);
@@ -46,7 +46,7 @@ public class ProductoController {
 
         List<Map<String, String>> productos = new ArrayList<>();
 
-        final Connection connect = new connectFactory().create();
+        final Connection connect = new connectionF().create();
 
         try (connect) {
             final PreparedStatement statement = connect.prepareStatement("select id, nombre, descripcion, cantidad from producto");
@@ -83,7 +83,7 @@ public class ProductoController {
         int cantidad = Integer.valueOf(producto.get("cantidad"));
         String query = "insert into producto ( nombre, descripcion, cantidad) values (?,?,?)";
 
-        final Connection connect = new connectFactory().create();
+        final Connection connect = new connectionF().create();
         try (connect) {
             connect.setAutoCommit(false);
             final PreparedStatement statement = connect.prepareStatement(query);
