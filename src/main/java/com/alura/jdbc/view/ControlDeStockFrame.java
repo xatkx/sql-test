@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.alura.jdbc.controller.CategoriaController;
 import com.alura.jdbc.controller.ProductoController;
+import com.alura.jdbc.modelo.Categoria;
 import com.alura.jdbc.modelo.Producto;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -41,7 +42,7 @@ public class ControlDeStockFrame extends JFrame {
 
         this.categoriaController = new CategoriaController();
         this.productoController = new ProductoController();
-
+        System.out.println("klk");
         Container container = getContentPane();
         setLayout(null);
 
@@ -106,7 +107,7 @@ public class ControlDeStockFrame extends JFrame {
 
         // TODO
         var categorias = this.categoriaController.listar();
-        // categorias.forEach(categoria -> comboCategoria.addItem(categoria));
+         categorias.forEach(categoria -> comboCategoria.addItem(categoria));
 
         textoNombre.setBounds(10, 25, 265, sizeY);
         textoDescripcion.setBounds(10, 65, 265, sizeY);
@@ -255,9 +256,10 @@ public class ControlDeStockFrame extends JFrame {
 
         // TODO
         var producto = new Producto(textoNombre.getText(), textoDescripcion.getText(), cantidadInt);
-
-        var categoria = comboCategoria.getSelectedItem();
-
+        
+        Categoria categoria = (Categoria) comboCategoria.getSelectedItem();
+       
+            producto.setCategoriaId(categoria.getId());
         
             this.productoController.guardar(producto);
        

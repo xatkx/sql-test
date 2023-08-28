@@ -66,6 +66,14 @@ public class Producto {
         return cantidad;
     }
 
+    public int getCategoriaId() {
+        return categoriaId;
+    }
+
+    public void setCategoriaId(int categoriaId) {
+        this.categoriaId = categoriaId;
+    }
+
     /**
      * @param cantidad the cantidad to set
      */
@@ -84,6 +92,6 @@ public class Producto {
     
     
     
-    private Integer id, cantidad;
-    private String nombre, descripcion;;   
+    private Integer id, cantidad, categoriaId;
+    private String nombre, descripcion;   
 }

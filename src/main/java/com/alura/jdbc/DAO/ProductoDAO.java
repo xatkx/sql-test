@@ -27,7 +27,7 @@ public class ProductoDAO {
     public void Create(Producto producto) {
         int maxCantidad = 50;
         int cantidad = producto.getCantidad();
-        String query = "insert into producto ( nombre, descripcion, cantidad) values (?,?,?)";
+        String query = "insert into producto ( nombre, descripcion, cantidad, categoriaId) values (?,?,?,?)";
 
         try (connection) {
             connection.setAutoCommit(false);
@@ -59,6 +59,7 @@ public class ProductoDAO {
             statement.setString(1, producto.getNombre());
             statement.setString(2, producto.getDescripcion());
             statement.setInt(3, resto);
+            statement.setInt(4, producto.getCategoriaId());
 
             statement.execute();
 
@@ -124,6 +125,7 @@ public class ProductoDAO {
             boolean b = s.execute();
         }catch(SQLException e)
         {
+            System.out.println(e.getMessage());
             throw new RuntimeException(e);
         }
     }
