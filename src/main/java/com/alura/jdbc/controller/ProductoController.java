@@ -1,6 +1,7 @@
 package com.alura.jdbc.controller;
 
 import com.alura.jdbc.factory.connectionF;
+import com.alura.jdbc.modelo.Producto;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
@@ -14,17 +15,18 @@ import java.util.Map;
 
 public class ProductoController {
 
-    public void modificar(String nombre, String descripcion, Integer id) throws SQLException {
+    public void modificar(Producto producto) throws SQLException {
 
-        String query = "UPDATE producto SET nombre = ? ,descripcion = ? WHERE id = ? ";
+        String query = "UPDATE producto SET nombre = ? ,descripcion = ?, cantidad = ? WHERE id = ? ";
 
         final Connection connect = new connectionF().create();
 
         try (connect) {
             PreparedStatement s = connect.prepareStatement(query);
-            s.setString(1, nombre);
-            s.setString(2, descripcion);
-            s.setInt(3, id);
+            s.setString(1, producto.getNombre());
+            s.setString(2, producto.getDescripcion());
+            s.setInt(3, producto.getCantidad());
+            s.setInt(4, producto.getId());
             boolean b = s.execute();
         }
     }
@@ -42,9 +44,9 @@ public class ProductoController {
         }
     }
 
-    public List<Map<String, String>> listar() throws SQLException {
+    public List<Producto> listar() throws SQLException {
 
-        List<Map<String, String>> productos = new ArrayList<>();
+        List<Producto> productos = new ArrayList<>();
 
         final Connection connect = new connectionF().create();
 
@@ -58,14 +60,12 @@ public class ProductoController {
                     ResultSet result = statement.getResultSet();
 
                     while (result.next()) {
-                        Map<String, String> producto = new HashMap<String, String>();
-
-                        producto.put("id", result.getString(1));
-                        producto.put("nombre", result.getString(2));
-                        producto.put("descripcion", result.getString(3));
-                        producto.put("cantidad", result.getString(4));
-
-//                result.
+                       var producto = new Producto(
+                               result.getString(2),
+                               result.getString(3),
+                               result.getInt(4)
+                               );
+                       producto.setId(result.getInt(1));
                         productos.add(producto);
 
 //                System.out.println(result.getString(1)+result.getString(1));
@@ -78,15 +78,15 @@ public class ProductoController {
         }
     }
 
-    public void guardar(Map<String, String> producto) throws SQLException {
+    public void guardar(Producto producto) throws SQLException {
         int maxCantidad = 50;
-        int cantidad = Integer.valueOf(producto.get("cantidad"));
+        int cantidad = producto.getCantidad();
         String query = "insert into producto ( nombre, descripcion, cantidad) values (?,?,?)";
 
         final Connection connect = new connectionF().create();
         try (connect) {
             connect.setAutoCommit(false);
-            final PreparedStatement statement = connect.prepareStatement(query);
+            final PreparedStatement statement = connect.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 
             try (statement) {
                 while (cantidad > 0) {
@@ -107,16 +107,28 @@ public class ProductoController {
 
     }
 
-    public void guardarDatos(Map<String, String> producto, int resto, PreparedStatement statement) throws SQLException {
+    public void guardarDatos(Producto producto, int resto, PreparedStatement statement) throws SQLException {
 //        if(resto < 50)
 //        {
 //            throw new RuntimeException("esto es un error mmg");
 //        }
 
-        statement.setString(1, producto.get("nombre"));
-        statement.setString(2, producto.get("descripcion"));
+        statement.setString(1, producto.getNombre());
+        statement.setString(2, producto.getDescripcion());
         statement.setInt(3, resto);
+        
         statement.execute();
+        
+        final ResultSet result = statement.getGeneratedKeys();
+
+        try (result) {
+
+            while (result.next()) {
+                int id = result.getInt(1);
+                producto.setId(id);
+                System.out.println(producto);
+            }
+        }
     }
 
 }

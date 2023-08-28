@@ -22,6 +22,8 @@ public class connectionF{
         pooldatasource.setJdbcUrl("jdbc:mysql://localhost/controlStock");
         pooldatasource.setUser("root");
         pooldatasource.setPassword("1212");
+        pooldatasource.setMinPoolSize(2);
+        pooldatasource.setMaxPoolSize(10);
         
         this.datasource = pooldatasource;
     }

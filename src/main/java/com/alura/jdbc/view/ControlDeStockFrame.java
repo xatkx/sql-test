@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.alura.jdbc.controller.CategoriaController;
 import com.alura.jdbc.controller.ProductoController;
+import com.alura.jdbc.modelo.Producto;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -192,9 +193,13 @@ public class ControlDeStockFrame extends JFrame {
                     Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
                     String nombre = String.valueOf( modelo.getValueAt(tabla.getSelectedRow(), 1));
                     String descripcion = String.valueOf( modelo.getValueAt(tabla.getSelectedRow(), 2));
+                    Integer cantidad = Integer.valueOf( modelo.getValueAt(tabla.getSelectedRow(), 3).toString());
+                    
+                    var producto = new Producto(nombre, descripcion, cantidad);
+                    producto.setId(id);
 
                    try {
-                        this.productoController.modificar(nombre, descripcion, id);
+                        this.productoController.modificar(producto);
             } catch (SQLException e) {
                        System.out.println(e.getMessage()+"klk");
             }
@@ -231,10 +236,11 @@ public class ControlDeStockFrame extends JFrame {
             try {
                 // TODO
                 productos.forEach(producto -> modelo.addRow(new Object[]{
-                    producto.get("id"),
-                    producto.get("nombre"),
-                    producto.get("descripcion"),
-                    producto.get("cantidad")}));
+                    producto.getId(),
+                    producto.getNombre(),
+                    producto.getDescripcion(),
+                    producto.getCantidad()
+                }));
             } catch (Exception e) {
                 throw e;
             }
@@ -262,10 +268,8 @@ public class ControlDeStockFrame extends JFrame {
         }
 
         // TODO
-        var producto = new HashMap<String, String>();
-        producto.put("nombre", textoNombre.getText());
-        producto.put("descripcion", textoDescripcion.getText());
-        producto.put("cantidad",String.valueOf(cantidadInt));
+        
+        var producto = new Producto(textoNombre.getText(),textoDescripcion.getText(),cantidadInt);
         
         var categoria = comboCategoria.getSelectedItem();
 
