@@ -19,21 +19,19 @@ import java.util.List;
  * @author kedwin
  */
 public class ProductoDAO {
-    
-   public ProductoDAO(Connection con){
-       this.connection = con;
-   }
-    
-   
-   public void Create(Producto producto) throws SQLException {
-       int maxCantidad = 50;
+
+    public ProductoDAO(Connection con) {
+        this.connection = con;
+    }
+
+    public void Create(Producto producto) {
+        int maxCantidad = 50;
         int cantidad = producto.getCantidad();
         String query = "insert into producto ( nombre, descripcion, cantidad) values (?,?,?)";
 
-        
         try (connection) {
             connection.setAutoCommit(false);
-            final PreparedStatement statement = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+            final PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             try (statement) {
                 while (cantidad > 0) {
@@ -50,35 +48,37 @@ public class ProductoDAO {
             }
             connection.commit();
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
-       
-   }
-   
-   public void guardarDatos(Producto producto, int resto, PreparedStatement statement) throws SQLException {
+    }
 
-        statement.setString(1, producto.getNombre());
-        statement.setString(2, producto.getDescripcion());
-        statement.setInt(3, resto);
-        
-        statement.execute();
-        
-        final ResultSet result = statement.getGeneratedKeys();
+    public void guardarDatos(Producto producto, int resto, PreparedStatement statement) {
+        try {
+            statement.setString(1, producto.getNombre());
+            statement.setString(2, producto.getDescripcion());
+            statement.setInt(3, resto);
 
-        try (result) {
+            statement.execute();
 
-            while (result.next()) {
-                int id = result.getInt(1);
-                producto.setId(id);
-                System.out.println(producto);
+            final ResultSet result = statement.getGeneratedKeys();
+
+            try (result) {
+
+                while (result.next()) {
+                    int id = result.getInt(1);
+                    producto.setId(id);
+                    System.out.println(producto);
+                }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
-   
-   
-   public List<Producto> Read() throws SQLException {
-       List<Producto> productos = new ArrayList<>();
 
+    public List<Producto> Read(){
+        List<Producto> productos = new ArrayList<>();
 
         try (connection) {
             final PreparedStatement statement = connection.prepareStatement("select id, nombre, descripcion, cantidad from producto");
@@ -90,12 +90,12 @@ public class ProductoDAO {
                     ResultSet result = statement.getResultSet();
 
                     while (result.next()) {
-                       var producto = new Producto(
-                               result.getString(2),
-                               result.getString(3),
-                               result.getInt(4)
-                               );
-                       producto.setId(result.getInt(1));
+                        var producto = new Producto(
+                                result.getString(2),
+                                result.getString(3),
+                                result.getInt(4)
+                        );
+                        producto.setId(result.getInt(1));
                         productos.add(producto);
 
 //                System.out.println(result.getString(1)+result.getString(1));
@@ -104,16 +104,17 @@ public class ProductoDAO {
 
 //            System.out.println("klk");
             }
-            
-        }
-        return productos;
-   }
-   
-   
-   public void Update(Producto producto) throws SQLException {
-       String query = "UPDATE producto SET nombre = ? ,descripcion = ?, cantidad = ? WHERE id = ? ";
 
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
         
+        return productos;
+    }
+
+    public void Update(Producto producto){
+        String query = "UPDATE producto SET nombre = ? ,descripcion = ?, cantidad = ? WHERE id = ? ";
+
         try (connection) {
             PreparedStatement s = connection.prepareStatement(query);
             s.setString(1, producto.getNombre());
@@ -121,18 +122,26 @@ public class ProductoDAO {
             s.setInt(3, producto.getCantidad());
             s.setInt(4, producto.getId());
             boolean b = s.execute();
+        }catch(SQLException e)
+        {
+            throw new RuntimeException(e);
         }
-   };
+    }
+
+    ;
    
-   public void Delete( Integer id) throws SQLException{
-       String query = "delete from producto where id = ?";
+   public void Delete(Integer id){
+        String query = "delete from producto where id = ?";
 
         try (connection) {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             statement.execute();
+        }catch(SQLException e)
+        {
+            throw new RuntimeException(e);
         }
-   }
-   
-   final private Connection connection; 
+    }
+
+    final private Connection connection;
 }

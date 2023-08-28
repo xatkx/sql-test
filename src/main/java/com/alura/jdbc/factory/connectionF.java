@@ -29,8 +29,12 @@ public class connectionF{
     }
     
 
-    public Connection create() throws SQLException{
-        return  this.datasource.getConnection();
+    public Connection create(){
+        try {
+            return  this.datasource.getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
     
     private DataSource datasource;

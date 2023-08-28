@@ -16,24 +16,24 @@ import java.util.Map;
 
 public class ProductoController {
 
-    public void modificar(Producto producto) throws SQLException {
-        var CRUD = new ProductoDAO(new connectionF().create());
+    ProductoDAO CRUD;
+    public ProductoController(){
+        CRUD = new ProductoDAO(new connectionF().create());
+    }
+    public void modificar(Producto producto) {
         CRUD.Update(producto);
 
     }
 
-    public void eliminar(Integer id) throws SQLException {
-        var CRUD = new ProductoDAO(new connectionF().create());
+    public void eliminar(Integer id) {
         CRUD.Delete(id);
     }
 
-    public List<Producto> listar() throws SQLException {
-        var CRUD = new ProductoDAO(new connectionF().create());
+    public List<Producto> listar()  {
         return CRUD.Read();
     }
 
-    public void guardar(Producto producto) throws SQLException {
-        var CRUD = new ProductoDAO(new connectionF().create());
+    public void guardar(Producto producto){
         CRUD.Create(producto);
     }
 
