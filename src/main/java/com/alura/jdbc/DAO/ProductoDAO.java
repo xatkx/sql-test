@@ -83,7 +83,7 @@ public class ProductoDAO {
         List<Producto> productos = new ArrayList<>();
 
         try {
-            final PreparedStatement statement = connection.prepareStatement("select id, nombre, descripcion, cantidad from producto");
+            final PreparedStatement statement = connection.prepareStatement("select id, nombre, descripcion, cantidad, categoriaId from producto");
 
             try (statement) {
                 boolean isRead = statement.execute();
@@ -98,6 +98,7 @@ public class ProductoDAO {
                                 result.getInt(4)
                         );
                         producto.setId(result.getInt(1));
+                        producto.setCategoriaId(result.getInt(5));
                         productos.add(producto);
 
 //                System.out.println(result.getString(1)+result.getString(1));
@@ -123,7 +124,7 @@ public class ProductoDAO {
         List<Producto> productos = new ArrayList<>();
 
         try {
-            final PreparedStatement statement = connection.prepareStatement("select id, nombre, descripcion, cantidad from producto where categoriaId = ?");
+            final PreparedStatement statement = connection.prepareStatement("select id, nombre, descripcion, cantidad, categoriaId from producto where categoriaId = ?");
 
             try (statement) {
                 statement.setInt(1, categoria.getId());
@@ -139,6 +140,7 @@ public class ProductoDAO {
                                 result.getInt(4)
                         );
                         producto.setId(result.getInt(1));
+                        producto.setCategoriaId(result.getInt(5));
                         productos.add(producto);
 
 //                System.out.println(result.getString(1)+result.getString(1));

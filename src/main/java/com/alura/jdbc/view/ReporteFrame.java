@@ -47,16 +47,16 @@ public class ReporteFrame extends JFrame {
 
     private void cargaReporte() {
         var contenido = categoriaController.cargaReporte();
-        
+        var productos = productoController.listar();
 
         // TODO
         contenido.forEach(fila -> {
             modelo.addRow(new Object[]{fila.getNombre()});
-            
-            var productos = productoController.listar(fila);
-            
             productos.forEach( producto -> {
-                modelo.addRow(new Object[] { "",producto.getNombre(), producto.getCantidad()});
+                if(fila.getId() == producto.getCategoriaId())
+                {
+                    modelo.addRow(new Object[] { "",producto.getNombre(), producto.getCantidad()});
+                }
             });
             
             
