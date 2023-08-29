@@ -40,4 +40,8 @@ public class Categoria {
     public Categoria(String nombre){
         this.nombre = nombre;
     }
+    public Categoria(String nombre, Integer id){
+        this.nombre = nombre;
+        this.id = id;   
+    }
 }

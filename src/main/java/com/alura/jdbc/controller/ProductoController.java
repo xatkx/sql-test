@@ -2,6 +2,7 @@ package com.alura.jdbc.controller;
 
 import com.alura.jdbc.DAO.ProductoDAO;
 import com.alura.jdbc.factory.connectionF;
+import com.alura.jdbc.modelo.Categoria;
 import com.alura.jdbc.modelo.Producto;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,27 +19,28 @@ public class ProductoController {
 
     ProductoDAO CRUD;
     public ProductoController(){
+        CRUD = new ProductoDAO(new connectionF().create());
         
     }
     
-    public void modificar(Producto producto) {
-        CRUD = new ProductoDAO(new connectionF().create());
+    public void modificar(Producto producto) {       
         CRUD.Update(producto);
 
     }
 
-    public void eliminar(Integer id) {
-        CRUD = new ProductoDAO(new connectionF().create());
+    public void eliminar(Integer id) {      
         CRUD.Delete(id);
     }
 
-    public List<Producto> listar()  {
-        CRUD = new ProductoDAO(new connectionF().create());
+    public List<Producto> listar()  {  
         return CRUD.Read();
+    }
+    
+    public List<Producto> listar(Categoria categoria)  {  
+        return CRUD.Read(categoria);
     }
 
     public void guardar(Producto producto){
-        CRUD = new ProductoDAO(new connectionF().create());
         CRUD.Create(producto);
     }
 

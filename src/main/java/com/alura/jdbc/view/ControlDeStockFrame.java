@@ -103,7 +103,7 @@ public class ControlDeStockFrame extends JFrame {
         textoDescripcion = new JTextField();
         textoCantidad = new JTextField();
         comboCategoria = new JComboBox<>();
-        comboCategoria.addItem("Elige una Categoría");
+        comboCategoria.addItem(new Categoria("Elige una Categoría",0));
 
         // TODO
         var categorias = this.categoriaController.listar();

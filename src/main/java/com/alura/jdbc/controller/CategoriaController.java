@@ -13,9 +13,9 @@ public class CategoriaController {
 		return new categoriaDAO(new connectionF().create()).Read();
 	}
 
-    public List<?> cargaReporte() {
+    public List<Categoria> cargaReporte() {
         // TODO
-        return new ArrayList<>();
+        return this.listar();
     }
 
 }

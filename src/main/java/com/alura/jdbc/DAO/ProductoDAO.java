@@ -5,6 +5,7 @@
 package com.alura.jdbc.DAO;
 
 import com.alura.jdbc.factory.connectionF;
+import com.alura.jdbc.modelo.Categoria;
 import com.alura.jdbc.modelo.Producto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,11 +26,11 @@ public class ProductoDAO {
     }
 
     public void Create(Producto producto) {
-        int maxCantidad = 50;
+        int maxCantidad = 256;
         int cantidad = producto.getCantidad();
         String query = "insert into producto ( nombre, descripcion, cantidad, categoriaId) values (?,?,?,?)";
 
-        try (connection) {
+        try {
             connection.setAutoCommit(false);
             final PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
@@ -78,10 +79,10 @@ public class ProductoDAO {
         }
     }
 
-    public List<Producto> Read(){
+    public List<Producto> Read() {
         List<Producto> productos = new ArrayList<>();
 
-        try (connection) {
+        try {
             final PreparedStatement statement = connection.prepareStatement("select id, nombre, descripcion, cantidad from producto");
 
             try (statement) {
@@ -106,41 +107,84 @@ public class ProductoDAO {
 //            System.out.println("klk");
             }
 
-        }catch(SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        
+
         return productos;
     }
+    
+    /**
+     *
+     * @param categoria
+     * @return
+     */
+    public List<Producto> Read(Categoria categoria) {
+        List<Producto> productos = new ArrayList<>();
 
-    public void Update(Producto producto){
+        try {
+            final PreparedStatement statement = connection.prepareStatement("select id, nombre, descripcion, cantidad from producto where categoriaId = ?");
+
+            try (statement) {
+                statement.setInt(1, categoria.getId());
+                boolean isRead = statement.execute();
+                if (isRead) {
+
+                    ResultSet result = statement.getResultSet();
+
+                    while (result.next()) {
+                        var producto = new Producto(
+                                result.getString(2),
+                                result.getString(3),
+                                result.getInt(4)
+                        );
+                        producto.setId(result.getInt(1));
+                        productos.add(producto);
+
+//                System.out.println(result.getString(1)+result.getString(1));
+                    }
+                }
+
+//            System.out.println("klk");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return productos;
+    }
+    
+    
+    public void Update(Producto producto) {
         String query = "UPDATE producto SET nombre = ? ,descripcion = ?, cantidad = ? WHERE id = ? ";
 
-        try (connection) {
-            PreparedStatement s = connection.prepareStatement(query);
-            s.setString(1, producto.getNombre());
-            s.setString(2, producto.getDescripcion());
-            s.setInt(3, producto.getCantidad());
-            s.setInt(4, producto.getId());
-            boolean b = s.execute();
-        }catch(SQLException e)
-        {
-            System.out.println(e.getMessage());
+        try {
+            final PreparedStatement s = connection.prepareStatement(query);
+
+            try (s) {
+                s.setString(1, producto.getNombre());
+                s.setString(2, producto.getDescripcion());
+                s.setInt(3, producto.getCantidad());
+                s.setInt(4, producto.getId());
+                boolean b = s.execute();
+            }
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-
-    ;
    
-   public void Delete(Integer id){
+   public void Delete(Integer id) {
         String query = "delete from producto where id = ?";
 
-        try (connection) {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, id);
-            statement.execute();
-        }catch(SQLException e)
-        {
+        try {
+            final PreparedStatement statement = connection.prepareStatement(query);
+            try (statement) {
+
+                statement.setInt(1, id);
+                statement.execute();
+            }
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
